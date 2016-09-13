@@ -25,9 +25,10 @@ namespace ServerApplication
                 Console.WriteLine("Waiting for message...");
                 message = server.retrieveMessage();
                 Console.WriteLine(message + "\n");
+
             }
 
-            server.closeConnection();
+           
 
         }
     }

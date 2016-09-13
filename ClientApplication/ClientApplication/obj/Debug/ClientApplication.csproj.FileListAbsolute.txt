@@ -4,3 +4,9 @@ c:\users\work\documents\visual studio 2015\Projects\ClientApplication\ClientAppl
 c:\users\work\documents\visual studio 2015\Projects\ClientApplication\ClientApplication\obj\Debug\ClientApplication.exe
 c:\users\work\documents\visual studio 2015\Projects\ClientApplication\ClientApplication\obj\Debug\ClientApplication.pdb
 c:\users\work\documents\visual studio 2015\Projects\ClientApplication\ClientApplication\obj\Debug\ClientApplication.csprojResolveAssemblyReference.cache
+C:\Users\Work\Documents\CommunicationsApp\ClientApplication\ClientApplication\bin\Debug\ClientApplication.exe.config
+C:\Users\Work\Documents\CommunicationsApp\ClientApplication\ClientApplication\obj\Debug\ClientApplication.exe
+C:\Users\Work\Documents\CommunicationsApp\ClientApplication\ClientApplication\obj\Debug\ClientApplication.pdb
+C:\Users\Work\Documents\CommunicationsApp\ClientApplication\ClientApplication\bin\Debug\ClientApplication.exe
+C:\Users\Work\Documents\CommunicationsApp\ClientApplication\ClientApplication\bin\Debug\ClientApplication.pdb
+C:\Users\Work\Documents\CommunicationsApp\ClientApplication\ClientApplication\obj\Debug\ClientApplication.csprojResolveAssemblyReference.cache

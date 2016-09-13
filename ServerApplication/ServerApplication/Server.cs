@@ -15,10 +15,6 @@ namespace ServerApplication
         TcpListener listener;
         TcpClient client;
         NetworkStream NetworkStream;
-        //Old Variables
-        //StreamReader sr;
-        //StreamWriter sw;
-
         /**Constructors**/
         public Server() { }
 
@@ -28,10 +24,6 @@ namespace ServerApplication
             this.listener = new TcpListener(IPAddress.Any, port);
             this.listener.Start();
 
-            /*Old TCP listener
-            this.listener = new TcpListener(port);
-            this.listener.Start();
-            */
         }
 
         public string retrieveMessage()
@@ -39,23 +31,38 @@ namespace ServerApplication
 
             //Refreshing the stream
             this.client = listener.AcceptTcpClient();
-
             NetworkStream = this.client.GetStream();
-            //sr = new StreamReader(client.GetStream());
-            //sw = new StreamWriter(client.GetStream());
-            //string message = sr.ReadLine();
 
+            //Reteriving message from client
             byte[] buffer = new byte[this.client.ReceiveBufferSize];
             int data = NetworkStream.Read(buffer, 0, client.ReceiveBufferSize);
             string message = Encoding.Unicode.GetString(buffer, 0, data);
 
-     
+            //Sending confirmation message back to client
+            sendMessage("Message received");
+
+            //Refreshing the connection
+            closeConnection();    
+
             return message;
         }
 
-        public void closeConnection()
+        public void sendMessage(string message)
+        {
+
+            //Converting message to byte
+            byte[] msg = Encoding.Unicode.GetBytes(message);
+
+            //Sending message to server
+            NetworkStream.Write(msg, 0, msg.Length);
+
+        }
+
+        private void closeConnection()
         {
             client.Close();
         }
+
+       
     }
 }

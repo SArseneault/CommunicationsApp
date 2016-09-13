@@ -17,9 +17,6 @@ namespace ClientApplication
         string IPAddress;
         int port;
         NetworkStream NetworkStream;
-        //Old variables
-        //StreamReader sr;
-        //StreamWriter sw;
 
         /**Constructors**/
         public Client(){ }
@@ -27,20 +24,20 @@ namespace ClientApplication
         /**Methods**/  
         public void establishConnection(string IPAddress = "127.0.0.1", int port = 80)
         {
-    
+            
+            //Storing connection settings
             this.IPAddress = IPAddress;
             this.port = port;
 
-            try {
+            try
+            {
+                //Attemp initial connection
                 this.transClient = new TcpClient(IPAddress, port);
                 this.NetworkStream = transClient.GetStream();
-
-                //Old stream logic 
-                //this.sr = new StreamReader(this.transClient.GetStream());
-                //this.sw = new StreamWriter(this.transClient.GetStream());
             }
             catch
             {
+                //If initial connection fails attempt to re-connect every 5 seconds
                 bool connected = false;
 
                 while(!connected)
@@ -86,13 +83,6 @@ namespace ClientApplication
             string response = "";
 
             try {
-                //Sending message to server
-                //this.sw.WriteLine(message);
-                //this.sw.Flush();
-
-                //Retrieving message from server
-                //response = this.sr.ReadLine();
-                //refreshConnection();
 
                 //Converting message to byte
                 byte[] msg = Encoding.Unicode.GetBytes(message);
@@ -104,10 +94,15 @@ namespace ClientApplication
                 byte[] buffer = new byte[this.transClient.ReceiveBufferSize];
                 int data = NetworkStream.Read(buffer, 0, transClient.ReceiveBufferSize);
                 response = Encoding.Unicode.GetString(buffer, 0, data);
-            
+
+                //Refreshing the connection
+                closeConnection();
+                refreshConnection();
+
             }
             catch
             {
+                //Refreshing the connection
                 refreshConnection();
             }
 

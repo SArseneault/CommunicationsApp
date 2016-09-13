@@ -4,3 +4,9 @@ c:\users\work\documents\visual studio 2015\Projects\ServerApplication\ServerAppl
 c:\users\work\documents\visual studio 2015\Projects\ServerApplication\ServerApplication\obj\Debug\ServerApplication.csprojResolveAssemblyReference.cache
 c:\users\work\documents\visual studio 2015\Projects\ServerApplication\ServerApplication\obj\Debug\ServerApplication.exe
 c:\users\work\documents\visual studio 2015\Projects\ServerApplication\ServerApplication\obj\Debug\ServerApplication.pdb
+C:\Users\Work\Documents\CommunicationsApp\ServerApplication\ServerApplication\bin\Debug\ServerApplication.exe.config
+C:\Users\Work\Documents\CommunicationsApp\ServerApplication\ServerApplication\obj\Debug\ServerApplication.exe
+C:\Users\Work\Documents\CommunicationsApp\ServerApplication\ServerApplication\obj\Debug\ServerApplication.pdb
+C:\Users\Work\Documents\CommunicationsApp\ServerApplication\ServerApplication\bin\Debug\ServerApplication.exe
+C:\Users\Work\Documents\CommunicationsApp\ServerApplication\ServerApplication\bin\Debug\ServerApplication.pdb
+C:\Users\Work\Documents\CommunicationsApp\ServerApplication\ServerApplication\obj\Debug\ServerApplication.csprojResolveAssemblyReference.cache
