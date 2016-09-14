@@ -12,56 +12,103 @@ namespace ServerApplication
     class Server
     {
         /**Fields**/
-        TcpListener listener;
-        TcpClient client;
-        NetworkStream NetworkStream;
+        private static byte[] buffer; //Used for sending and receiving messages
+        private static List<Socket> clientSockets; //List of client sockets
+        private static Socket serverSocket;
+        private int port;
+
         /**Constructors**/
-        public Server() { }
+        public Server(int port = 1302)
+        {
+            //Initialing the fields
+            serverSocket = new Socket (AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            this.port = port;
+            clientSockets = new List<Socket>();
+            buffer = new byte[1024];
+
+            Console.Title = "ServerSide";
+        }
 
         /**Methods**/
-        public void establishConnection(int port = 1302)
+        public void establishConnection()
         {
-            this.listener = new TcpListener(IPAddress.Any, port);
-            this.listener.Start();
+
+            //Binding on all available interfaces on provided port
+            serverSocket.Bind(new IPEndPoint(IPAddress.Any, port));
+
+            //Listening to client. Backlog = 10 pending connections
+            //All connections will be refused after
+            serverSocket.Listen(10);
+            serverSocket.BeginAccept(new AsyncCallback(AcceptCallBack), null);
+        }
+
+
+        private static void AcceptCallBack(IAsyncResult ASResults)
+        {
+            //Retrieve accepted connection and create a new client socket
+            Socket clientSocket = serverSocket.EndAccept(ASResults);
+
+            //Add the accepted socket to the list of clients
+            clientSockets.Add(clientSocket);
+
+            //Allow the server to accept additional connections again
+            clientSocket.BeginReceive(buffer, 0, buffer.Length, SocketFlags.None, new AsyncCallback(ReceiveCallBack), clientSocket);
+
+            //Accepting the incomming connection
+            serverSocket.BeginAccept(new AsyncCallback(AcceptCallBack), null);
 
         }
 
-        public string retrieveMessage()
+        private static void  ReceiveCallBack(IAsyncResult ASResults)
         {
+            //Creating a socket for the already accepted connection
+            Socket clientSocket = (Socket)ASResults.AsyncState;
 
-            //Refreshing the stream
-            this.client = listener.AcceptTcpClient();
-            NetworkStream = this.client.GetStream();
+            //Storing retrieved message
+            int received = clientSocket.EndReceive(ASResults);
+            byte[] messageBuf = new byte[received];
+            Array.Copy(buffer, messageBuf, received);
 
-            //Reteriving message from client
-            byte[] buffer = new byte[this.client.ReceiveBufferSize];
-            int data = NetworkStream.Read(buffer, 0, client.ReceiveBufferSize);
-            string message = Encoding.Unicode.GetString(buffer, 0, data);
+            //Converting the message to a string
+            string message = Encoding.ASCII.GetString(messageBuf);
 
-            //Sending confirmation message back to client
-            sendMessage("Message received");
+            string response = string.Empty;
 
-            //Refreshing the connection
-            closeConnection();    
+            //sending the time back to the client
+            if(message.ToLower() == "time")
+            {
+                response = DateTime.Now.ToLongTimeString();
+            }
+            else
+            {
+                response = "Thanks";
+            }
 
-            return message;
+            //Sending message back to the client
+            byte[] data = Encoding.ASCII.GetBytes(response);
+            clientSocket.BeginSend(data, 0, data.Length, SocketFlags.None, new AsyncCallback(SendCallBack), clientSocket);
+
+            //Allow the server to accept additional connections
+            clientSocket.BeginReceive(buffer, 0, buffer.Length, SocketFlags.None, new AsyncCallback(ReceiveCallBack), clientSocket);
+
         }
 
-        public void sendMessage(string message)
+
+        private static void SendCallBack(IAsyncResult ASResult)
+        {
+            Socket clientSocket = (Socket)ASResult.AsyncState;
+            clientSocket.EndSend(ASResult);
+        }
+
+
+        public void sendMessage(string message, Socket socket)
         {
 
-            //Converting message to byte
-            byte[] msg = Encoding.Unicode.GetBytes(message);
-
-            //Sending message to server
-            NetworkStream.Write(msg, 0, msg.Length);
+            byte[] data = Encoding.ASCII.GetBytes(message);
+            socket.BeginSend(data, 0, data.Length, SocketFlags.None, new AsyncCallback(SendCallBack), socket);
 
         }
 
-        private void closeConnection()
-        {
-            client.Close();
-        }
 
        
     }

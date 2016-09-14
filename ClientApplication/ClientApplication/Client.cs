@@ -13,98 +13,74 @@ namespace ClientApplication
     public class Client
     {
         /**Fields**/
-        TcpClient transClient;
-        string IPAddress;
-        int port;
-        NetworkStream NetworkStream;
+        private static Socket clientSocket;
+        private int port;
 
         /**Constructors**/
-        public Client(){ }
-
-        /**Methods**/  
-        public void establishConnection(string IPAddress = "127.0.0.1", int port = 80)
+        public Client(int port = 1302)
         {
-            
-            //Storing connection settings
-            this.IPAddress = IPAddress;
+            //Initializing fields
+            clientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             this.port = port;
 
-            try
-            {
-                //Attemp initial connection
-                this.transClient = new TcpClient(IPAddress, port);
-                this.NetworkStream = transClient.GetStream();
-            }
-            catch
-            {
-                //If initial connection fails attempt to re-connect every 5 seconds
-                bool connected = false;
+            Console.Title = "ClientSide";
+        }
 
-                while(!connected)
-                { 
-                    Console.WriteLine("Wasn't able to establish connection trying again...");
-                    //Waiting 5 seconds before trying again
-                    System.Threading.Thread.Sleep(5000);
+        /**Methods**/
+        public void establishConnection()
+        {
+            //Creating counter for connection attempts
+            int connectionAttempts = 0;
 
-                    try
-                    {
-                        this.transClient = new TcpClient(IPAddress, port);
-                        this.NetworkStream = transClient.GetStream();
-                        //If it makes it this far then it properly connected
-                        connected = true;
-                    }
-                    catch { }
+            //Attempting to connect to server over loop
+            while (!clientSocket.Connected)
+            {
+                try
+                {
+                    //Incrementing attempt counter
+                    connectionAttempts++;
+
+                    //Create connection
+                    clientSocket.Connect(IPAddress.Loopback, port);
+                }
+                catch (SocketException)
+                {
+                    //Writing the connection attempts to the user
+                    Console.Clear();
+                    Console.WriteLine("Current Connection Attempt #: " + connectionAttempts.ToString());
                 }
 
-
             }
 
+            Console.Clear();
+            Console.WriteLine("Connected");
            
         }
 
-        private void refreshConnection()
-        {
+    
 
-            //Calling the establishConnection method again with the already provided parameters
-            establishConnection(this.IPAddress  , this.port);
-
-
-        }
-
-        private void closeConnection()
-        {
-            this.transClient.Close();
-
-        }
 
 
         public string sendMessage(string message="")
         {
-            string response = "";
+           
+            //Converting message to a byte
+            byte[] messageBuffer = Encoding.ASCII.GetBytes(message);
 
-            try {
+            //Sending message to server
+            clientSocket.Send(messageBuffer);
 
-                //Converting message to byte
-                byte[] msg = Encoding.Unicode.GetBytes(message);
+            //Retreive message from server
+            byte[] responseBuffer = new byte[1024];
+            int responseSize = clientSocket.Receive(responseBuffer);
 
-                //Sending message to server
-                NetworkStream.Write(msg, 0, msg.Length);
+            //Converting response to a byte array
+            byte[] data = new byte[responseSize];
+            Array.Copy(responseBuffer, data, responseSize);
 
-                //Retrieving message from server
-                byte[] buffer = new byte[this.transClient.ReceiveBufferSize];
-                int data = NetworkStream.Read(buffer, 0, transClient.ReceiveBufferSize);
-                response = Encoding.Unicode.GetString(buffer, 0, data);
+            //Converting the message to a string
+            string response = Encoding.ASCII.GetString(responseBuffer);
 
-                //Refreshing the connection
-                closeConnection();
-                refreshConnection();
-
-            }
-            catch
-            {
-                //Refreshing the connection
-                refreshConnection();
-            }
 
             return response;
         }

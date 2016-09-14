@@ -12,22 +12,15 @@ namespace ServerApplication
         {
 
             //Creating new server object
-            Server server = new Server();
+            Server server = new Server(1302);
 
+            //Setting up the connection
             Console.WriteLine("Establishing Connection...");
-            server.establishConnection(1302);
+            server.establishConnection();
             Console.WriteLine("Connected");
 
-            string message;
 
-            while (true)
-            {
-                Console.WriteLine("Waiting for message...");
-                message = server.retrieveMessage();
-                Console.WriteLine(message + "\n");
-
-            }
-
+            Console.ReadKey();
            
 
         }

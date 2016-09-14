@@ -18,37 +18,26 @@ namespace ClientApplication
 
             //Establishing a connection
             Console.WriteLine("Establishing connection...");
-            client.establishConnection("127.0.0.1", 1302);
-            Console.WriteLine("Connected");
+            client.establishConnection();
+           
 
-            string response;
-            string message;
+            string message = String.Empty;
+            string response = String.Empty;
 
-            while (true)
+            while(true)
             {
-                try {
-                    Console.WriteLine("Send Message To Server: ");
-                    message = Console.ReadLine();
+                Console.Write("Send message to server:");
+                message = Console.ReadLine();
+         
+                response = client.sendMessage(message);
 
-                    response = client.sendMessage(message);
-                    Console.WriteLine("Response from server: " + response);
+                Console.Write("Server response: "+response);
+        
 
-                    //This is handled internally now
-                    //client.closeConnection();
-                    //client.refreshConnection();
-                  
-                }
-                catch
-                {
-                    Console.WriteLine("Connection Ended. Please try again");
-                }
             }
 
            
 
-            Console.WriteLine("Enter to continue..");
-            Console.ReadLine();
-            
 
         }
     }
