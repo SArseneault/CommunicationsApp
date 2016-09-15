@@ -26,12 +26,12 @@ namespace ClientApplication
 
             while(true)
             {
-                Console.Write("Send message to server:");
+                Console.WriteLine("Send message to server:");
                 message = Console.ReadLine();
          
                 response = client.sendMessage(message);
 
-                Console.Write("Server response: "+response);
+                Console.WriteLine("Server response: "+response);
         
 
             }

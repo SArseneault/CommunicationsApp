@@ -48,14 +48,20 @@ namespace ServerApplication
             //Retrieve accepted connection and create a new client socket
             Socket clientSocket = serverSocket.EndAccept(ASResults);
 
-            //Add the accepted socket to the list of clients
-            clientSockets.Add(clientSocket);
+            try {
+                //Add the accepted socket to the list of clients
+                clientSockets.Add(clientSocket);
 
-            //Allow the server to accept additional connections again
-            clientSocket.BeginReceive(buffer, 0, buffer.Length, SocketFlags.None, new AsyncCallback(ReceiveCallBack), clientSocket);
+                //Allow the server to accept additional connections again
+                clientSocket.BeginReceive(buffer, 0, buffer.Length, SocketFlags.None, new AsyncCallback(ReceiveCallBack), clientSocket);
 
-            //Accepting the incomming connection
-            serverSocket.BeginAccept(new AsyncCallback(AcceptCallBack), null);
+                //Accepting the incomming connection
+                serverSocket.BeginAccept(new AsyncCallback(AcceptCallBack), null);
+            }
+            catch
+            {
+                disconnectClient(clientSocket);
+            }
 
         }
 
@@ -64,18 +70,60 @@ namespace ServerApplication
             //Creating a socket for the already accepted connection
             Socket clientSocket = (Socket)ASResults.AsyncState;
 
-            //Storing retrieved message
-            int received = clientSocket.EndReceive(ASResults);
-            byte[] messageBuf = new byte[received];
-            Array.Copy(buffer, messageBuf, received);
+            try {
+                //Storing retrieved message
+                int received = clientSocket.EndReceive(ASResults);
+                byte[] messageBuf = new byte[received];
+                Array.Copy(buffer, messageBuf, received);
 
-            //Converting the message to a string
-            string message = Encoding.ASCII.GetString(messageBuf);
+                //Converting the message to a string
+                string message = Encoding.ASCII.GetString(messageBuf);
+
+                //Reteriving client IP address
+                IPEndPoint remoteIpEndPoint = clientSocket.RemoteEndPoint as IPEndPoint;
+                IPEndPoint localIpEndPoint = clientSocket.LocalEndPoint as IPEndPoint;
+
+
+
+                //if (remoteIpEndPoint != null)
+                //{
+                //    // Using the RemoteEndPoint property.
+                //    Console.WriteLine("I am connected to " + remoteIpEndPoint.Address + "on port number " + remoteIpEndPoint.Port);
+                //}
+
+                //if (localIpEndPoint != null)
+                //{
+                //    // Using the LocalEndPoint property.
+                //    Console.WriteLine("My local IpAddress is :" + localIpEndPoint.Address + "I am connected on port number " + localIpEndPoint.Port);
+                //}
+
+                //Displaying the message to console
+                Console.WriteLine("Request from client " + localIpEndPoint.Address + ": " + message);
+
+                //Determingin what to do with the request
+                string response = determineRequest(message);
+
+
+                //Sending message back to the client
+                byte[] data = Encoding.ASCII.GetBytes(response);
+                clientSocket.BeginSend(data, 0, data.Length, SocketFlags.None, new AsyncCallback(SendCallBack), clientSocket);
+
+                //Allow the server to accept additional connections
+                clientSocket.BeginReceive(buffer, 0, buffer.Length, SocketFlags.None, new AsyncCallback(ReceiveCallBack), clientSocket);
+            }
+            catch
+            {
+                disconnectClient(clientSocket);
+            }
+        }
+
+        private static string determineRequest(string message)
+        {
 
             string response = string.Empty;
 
             //sending the time back to the client
-            if(message.ToLower() == "time")
+            if (message.ToLower() == "time")
             {
                 response = DateTime.Now.ToLongTimeString();
             }
@@ -84,12 +132,7 @@ namespace ServerApplication
                 response = "Thanks";
             }
 
-            //Sending message back to the client
-            byte[] data = Encoding.ASCII.GetBytes(response);
-            clientSocket.BeginSend(data, 0, data.Length, SocketFlags.None, new AsyncCallback(SendCallBack), clientSocket);
-
-            //Allow the server to accept additional connections
-            clientSocket.BeginReceive(buffer, 0, buffer.Length, SocketFlags.None, new AsyncCallback(ReceiveCallBack), clientSocket);
+            return response;
 
         }
 
@@ -103,10 +146,29 @@ namespace ServerApplication
 
         public void sendMessage(string message, Socket socket)
         {
+            try
+            {
+                byte[] data = Encoding.ASCII.GetBytes(message);
+                socket.BeginSend(data, 0, data.Length, SocketFlags.None, new AsyncCallback(SendCallBack), socket);
+            }
+            catch
+            {
+                disconnectClient(socket);
+            }
 
-            byte[] data = Encoding.ASCII.GetBytes(message);
-            socket.BeginSend(data, 0, data.Length, SocketFlags.None, new AsyncCallback(SendCallBack), socket);
+        }
 
+        private static void disconnectClient(Socket clientSocket)
+        {
+            try
+            {
+                clientSocket.Shutdown(SocketShutdown.Both);
+                clientSocket.Close();
+            }
+            catch
+            {
+                //Disconnect didn't happen
+            }
         }
 
 

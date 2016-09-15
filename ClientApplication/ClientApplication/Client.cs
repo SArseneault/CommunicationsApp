@@ -59,33 +59,56 @@ namespace ClientApplication
 
     
 
-
-
         public string sendMessage(string message="")
         {
-           
-            //Converting message to a byte
-            byte[] messageBuffer = Encoding.ASCII.GetBytes(message);
+            string response = string.Empty;
 
-            //Sending message to server
-            clientSocket.Send(messageBuffer);
+            try {
+                //Converting message to a byte
+                byte[] messageBuffer = Encoding.ASCII.GetBytes(message);
 
-            //Retreive message from server
-            byte[] responseBuffer = new byte[1024];
-            int responseSize = clientSocket.Receive(responseBuffer);
+                //Sending message to server
+                clientSocket.Send(messageBuffer);
 
-            //Converting response to a byte array
-            byte[] data = new byte[responseSize];
-            Array.Copy(responseBuffer, data, responseSize);
+                //Retreive message from server
+                byte[] responseBuffer = new byte[1024];
+                int responseSize = clientSocket.Receive(responseBuffer);
 
-            //Converting the message to a string
-            string response = Encoding.ASCII.GetString(responseBuffer);
+                //Converting response to a byte array
+                byte[] data = new byte[responseSize];
+                Array.Copy(responseBuffer, data, responseSize);
 
+                //Converting the message to a string
+                response = Encoding.ASCII.GetString(responseBuffer);
+
+                //Removing trailing null characters
+                response.Replace("\n", String.Empty).Trim();
+            }
+            catch
+            {
+
+                Console.WriteLine("Lost Connection to Server");
+                disconnectServer();
+                establishConnection();
+            }
 
             return response;
         }
 
-    
+        private void disconnectServer()
+        {
+            try
+            {
+                clientSocket.Shutdown(SocketShutdown.Both);
+                clientSocket.Close();
+
+                clientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            }
+            catch
+            {
+                //Disconnect didn't happen
+            }
+        }
 
    
     }
