@@ -13,8 +13,8 @@ namespace ClientApplication
         static void Main(string[] args)
         {
 
-            //Creating a new client
-            Client client = new Client();
+            //Creating a new client - *This port number should be stored in config file.
+            Client client = new Client(1302);
 
             //Establishing a connection
             Console.WriteLine("Establishing connection...");
@@ -33,12 +33,7 @@ namespace ClientApplication
 
                 Console.WriteLine("Server response: "+response);
         
-
             }
-
-           
-
-
         }
     }
 }

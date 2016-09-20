@@ -11,7 +11,7 @@ namespace ServerApplication
         static void Main(string[] args)
         {
 
-            //Creating new server object
+            //Creating new server object -*This port number should be stored in config file.
             Server server = new Server(1302);
 
             //Setting up the connection
@@ -21,7 +21,6 @@ namespace ServerApplication
 
 
             Console.ReadKey();
-           
 
         }
     }

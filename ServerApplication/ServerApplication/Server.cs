@@ -25,7 +25,8 @@ namespace ServerApplication
             this.port = port;
             clientSockets = new List<Socket>();
             buffer = new byte[1024];
-
+            
+            
             Console.Title = "ServerSide";
         }
 
@@ -98,7 +99,7 @@ namespace ServerApplication
                 //}
 
                 //Displaying the message to console
-                Console.WriteLine("Request from client " + localIpEndPoint.Address + ": " + message);
+                Console.WriteLine("Request from client " + remoteIpEndPoint.Address + ": " + message);
 
                 //Determingin what to do with the request
                 string response = determineRequest(message);
@@ -122,10 +123,17 @@ namespace ServerApplication
 
             string response = string.Empty;
 
+            //Update coordinates
+
+
             //sending the time back to the client
             if (message.ToLower() == "time")
             {
                 response = DateTime.Now.ToLongTimeString();
+            }
+            else if (message.ToLower() == "broadcast")
+            {
+                broadcastToClients("Hello ALL");
             }
             else
             {
@@ -133,6 +141,44 @@ namespace ServerApplication
             }
 
             return response;
+
+        }
+
+        
+        //Broadcasting message to ALL clients
+        private static void broadcastToClients(string message, Socket sourceClient = null)
+        {
+            //Creaitng  a list of sockets to store the "bad" connections. These will later be disconnected.
+            List<Socket> disconnectedSockets = new List<Socket>();
+
+            //Looping through the client socket list
+            foreach (Socket clientSocket in clientSockets)
+            {
+                if (clientSocket != sourceClient)
+                {
+                    try
+                    {
+                        //Sending message to client
+                        byte[] data = Encoding.ASCII.GetBytes(message);
+                        clientSocket.BeginSend(data, 0, data.Length, SocketFlags.None, new AsyncCallback(SendCallBack), clientSocket);
+
+                        //Allow the server to accept additional connections
+                        clientSocket.BeginReceive(buffer, 0, buffer.Length, SocketFlags.None, new AsyncCallback(ReceiveCallBack), clientSocket);
+
+                    }
+                    catch
+                    {
+                        //Adding to the list of sockets to be properly disconnected.
+                        disconnectedSockets.Add(clientSocket);
+                    }
+                }
+             }
+
+            //Properly disconnecting the clients from the server
+            foreach(Socket s in disconnectedSockets)
+            {
+                disconnectClient(s);
+            }
 
         }
 
@@ -164,6 +210,13 @@ namespace ServerApplication
             {
                 clientSocket.Shutdown(SocketShutdown.Both);
                 clientSocket.Close();
+
+                //Grabbing IP from client
+                IPEndPoint remoteIpEndPoint = clientSocket.RemoteEndPoint as IPEndPoint;
+             
+                //Updating rest of clients 
+                broadcastToClients("IP Disconnected: " + remoteIpEndPoint.Address +" TEST: " + remoteIpEndPoint.ToString());
+
             }
             catch
             {

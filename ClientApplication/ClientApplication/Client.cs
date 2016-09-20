@@ -82,7 +82,7 @@ namespace ClientApplication
                 response = Encoding.ASCII.GetString(responseBuffer);
 
                 //Removing trailing null characters
-                response.Replace("\n", String.Empty).Trim();
+              //  response.Replace(null, String.Empty).Trim();
             }
             catch
             {
