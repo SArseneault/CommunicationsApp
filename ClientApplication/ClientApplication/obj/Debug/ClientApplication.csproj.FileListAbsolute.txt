@@ -10,3 +10,9 @@ C:\Users\Work\Documents\CommunicationsApp\ClientApplication\ClientApplication\ob
 C:\Users\Work\Documents\CommunicationsApp\ClientApplication\ClientApplication\bin\Debug\ClientApplication.exe
 C:\Users\Work\Documents\CommunicationsApp\ClientApplication\ClientApplication\bin\Debug\ClientApplication.pdb
 C:\Users\Work\Documents\CommunicationsApp\ClientApplication\ClientApplication\obj\Debug\ClientApplication.csprojResolveAssemblyReference.cache
+C:\Users\Sam\Desktop\Projects\ClientApplication\ClientApplication\bin\Debug\ClientApplication.exe.config
+C:\Users\Sam\Desktop\Projects\ClientApplication\ClientApplication\bin\Debug\ClientApplication.exe
+C:\Users\Sam\Desktop\Projects\ClientApplication\ClientApplication\bin\Debug\ClientApplication.pdb
+C:\Users\Sam\Desktop\Projects\ClientApplication\ClientApplication\obj\Debug\ClientApplication.csprojResolveAssemblyReference.cache
+C:\Users\Sam\Desktop\Projects\ClientApplication\ClientApplication\obj\Debug\ClientApplication.exe
+C:\Users\Sam\Desktop\Projects\ClientApplication\ClientApplication\obj\Debug\ClientApplication.pdb

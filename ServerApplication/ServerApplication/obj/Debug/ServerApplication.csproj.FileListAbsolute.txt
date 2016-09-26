@@ -10,3 +10,11 @@ C:\Users\Work\Documents\CommunicationsApp\ServerApplication\ServerApplication\ob
 C:\Users\Work\Documents\CommunicationsApp\ServerApplication\ServerApplication\bin\Debug\ServerApplication.exe
 C:\Users\Work\Documents\CommunicationsApp\ServerApplication\ServerApplication\bin\Debug\ServerApplication.pdb
 C:\Users\Work\Documents\CommunicationsApp\ServerApplication\ServerApplication\obj\Debug\ServerApplication.csprojResolveAssemblyReference.cache
+C:\Users\Sam\Desktop\Projects\ServerApplication\ServerApplication\bin\Debug\ServerApplication.exe.config
+C:\Users\Sam\Desktop\Projects\ServerApplication\ServerApplication\bin\Debug\ServerApplication.exe
+C:\Users\Sam\Desktop\Projects\ServerApplication\ServerApplication\bin\Debug\ServerApplication.pdb
+C:\Users\Sam\Desktop\Projects\ServerApplication\ServerApplication\obj\Debug\ServerApplication.csprojResolveAssemblyReference.cache
+C:\Users\Sam\Desktop\Projects\ServerApplication\ServerApplication\obj\Debug\ServerApplication.exe
+C:\Users\Sam\Desktop\Projects\ServerApplication\ServerApplication\obj\Debug\ServerApplication.pdb
+C:\Users\Sam\Desktop\Projects\ServerApplication\ServerApplication\bin\Debug\MySql.Data.dll
+C:\Users\Sam\Desktop\Projects\ServerApplication\ServerApplication\bin\Debug\MySql.Data.xml

@@ -1,0 +1,11 @@
+C:\Users\Sam\Desktop\Projects\ServerApplication\UnitTestProject\bin\Debug\UnitTestProject.dll
+C:\Users\Sam\Desktop\Projects\ServerApplication\UnitTestProject\bin\Debug\UnitTestProject.pdb
+C:\Users\Sam\Desktop\Projects\ServerApplication\UnitTestProject\bin\Debug\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll
+C:\Users\Sam\Desktop\Projects\ServerApplication\UnitTestProject\bin\Debug\ServerApplication.exe
+C:\Users\Sam\Desktop\Projects\ServerApplication\UnitTestProject\bin\Debug\MySql.Data.dll
+C:\Users\Sam\Desktop\Projects\ServerApplication\UnitTestProject\bin\Debug\ServerApplication.pdb
+C:\Users\Sam\Desktop\Projects\ServerApplication\UnitTestProject\bin\Debug\Microsoft.VisualStudio.QualityTools.UnitTestFramework.xml
+C:\Users\Sam\Desktop\Projects\ServerApplication\UnitTestProject\bin\Debug\MySql.Data.xml
+C:\Users\Sam\Desktop\Projects\ServerApplication\UnitTestProject\obj\Debug\UnitTestProject.csprojResolveAssemblyReference.cache
+C:\Users\Sam\Desktop\Projects\ServerApplication\UnitTestProject\obj\Debug\UnitTestProject.dll
+C:\Users\Sam\Desktop\Projects\ServerApplication\UnitTestProject\obj\Debug\UnitTestProject.pdb

@@ -28,6 +28,7 @@ namespace ServerApplication
             
             
             Console.Title = "ServerSide";
+
         }
 
         /**Methods**/
