@@ -57,7 +57,7 @@ namespace ClientApplication
            
         }
 
-    
+        
 
         public string sendMessage(string message="")
         {

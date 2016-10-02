@@ -65,6 +65,54 @@ namespace ServerApplication
             catch
             {
 
+                dbConn.Close();
+                return false;
+
+            }
+
+        }
+
+        public bool LoginUser(string username, string password)
+        {
+            try
+            {
+                cmd = new MySqlCommand("LoginUser", dbConn);
+
+                cmd.CommandType = System.Data.CommandType.StoredProcedure;
+
+                cmd.Parameters.AddWithValue("@UN", username);
+                cmd.Parameters["@UN"].Direction = System.Data.ParameterDirection.Input;
+
+                cmd.Parameters.AddWithValue("@PASS", password);
+                cmd.Parameters["@PASS"].Direction = System.Data.ParameterDirection.Input;
+
+                cmd.Parameters.Add(new MySqlParameter("UserExists", MySqlDbType.VarChar));
+                cmd.Parameters["UserExists"].Direction = ParameterDirection.Output;
+
+                
+
+                //Performing the actual execution
+                dbConn.Open();
+                cmd.ExecuteNonQuery();
+
+                string userExist = cmd.Parameters["UserExists"].Value.ToString();
+
+                dbConn.Close();
+
+
+                if (string.IsNullOrEmpty(userExist))
+                {
+                    return false;
+                } 
+                
+                //User was logged in
+                return true;
+            }
+            catch
+            {
+                dbConn.Close();
+
+                //Wasn't able to login the user
                 return false;
 
             }
