@@ -12,8 +12,12 @@ TARGET = UserInterface
 TEMPLATE = app
 
 
-SOURCES += main.cpp
+SOURCES += main.cpp \
+    bullet.cpp \
+    PlayerObject.cpp
 
-HEADERS  +=
+HEADERS  += \
+    bullet.h \
+    PlayerObject.h
 
 FORMS    +=
