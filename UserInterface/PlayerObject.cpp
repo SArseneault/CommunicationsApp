@@ -6,6 +6,7 @@
 #include <bullet.h>
 #include <QGraphicsScene>
 #include <QGraphicsView>
+#include <enemy.h>
 
 void PlayerObject::keyPressEvent(QKeyEvent *event)
 {
@@ -42,6 +43,15 @@ void PlayerObject::keyPressEvent(QKeyEvent *event)
         scene()->addItem(bullet);
         qDebug() << "Input: Space";
     }
+
+
+}
+
+void PlayerObject::spawn()
+{
+    //Create an enemy
+    enemy * Enemy = new enemy();
+    scene()->addItem(Enemy);
 
 
 }

@@ -4,6 +4,8 @@
 #include "PlayerObject.h"
 #include <QGraphicsView>
 #include <QKeyEvent>
+#include <QTimer>
+#include <QObject>
 
 /*
  - QGraphicsScene
@@ -18,17 +20,17 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
 
     //Creating variables to store the scene size
-    const int sceneX = 1000, sceneY= 1000;
+    const int sceneWidth = 1000, sceneHeight= 1000;
 
     //Creating a scene
     QGraphicsScene * mainScene = new QGraphicsScene();
 
     //Setting the window properties
-    mainScene->setSceneRect(0, 0, sceneX, sceneY);
+    mainScene->setSceneRect(0, 0, sceneWidth, sceneHeight);
 
     //Create an item to put into the scene
     PlayerObject * player = new PlayerObject();
-    player->setRect(sceneX/2,sceneY/2,100,100); //X,Y, Width, Height
+    player->setRect(sceneWidth/2,sceneHeight/2,100,100); //X,Y, Width, Height
 
 
     //Add item to the scene
@@ -42,11 +44,16 @@ int main(int argc, char *argv[])
     QGraphicsView * view = new QGraphicsView(mainScene);
     view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    //view->setFixedSize(sceneX,sceneY);
+    //view->setFixedSize(sceneWidth,sceneHeight);
 
     //Making the view widget visible
     view->show();
 
+    //Spawning enemy
+    QTimer * timer = new QTimer();
+    QObject::connect(timer, SIGNAL(timeout()), player, SLOT(spawn()));
+
+    timer->start(2000);
 
     return a.exec();
 }

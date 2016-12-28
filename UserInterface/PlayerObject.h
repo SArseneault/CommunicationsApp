@@ -3,14 +3,19 @@
 
 #include <QGraphicsRectItem>
 #include <widget.h>
+#include <QObject>
 
 //Public class inheriting from the QGraphicsRect abstract class
-class PlayerObject: public QGraphicsRectItem
+class PlayerObject: public QObject, public QGraphicsRectItem
 {
+    Q_OBJECT
     //Public Member functions
 public:
         void keyPressEvent(QKeyEvent * event);
 
+    //Public slot member functions
+public slots:
+        void spawn();
 };
 
 #endif // PlayerObject_H
