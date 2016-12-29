@@ -11,9 +11,7 @@ CONFIG -= app_bundle
 TEMPLATE = app
 
 SOURCES += main.cpp \
-    client.cpp \
-    sockettest.cpp
+    client.cpp
 
 HEADERS += \
-    client.h \
-    sockettest.h
+    client.h

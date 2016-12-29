@@ -5,26 +5,33 @@
 #include <QTcpSocket>
 #include <QDataStream>
 #include <QDebug>
+#include <QList>
+#include <QString>
 
 class client : public QObject
 {
     Q_OBJECT
 public:
-    //Default Constructor(s)
+    // Default Constructor(s)
     explicit client(QObject *parent = 0);
-
     client(int port);
 
     // Public Methods
-    void establishConnection();
-    const char* SendMessage(const char * message="");
-    void disconnectServer();
-
+    bool establishConnection();
+    bool SendMessage(QByteArray message="");
+    QByteArray GetLatestServerMessage();
+    QString GetErrorMessages();
 
 private:
-    //Private Fields
+    // Private Fields
     int port;
     QTcpSocket *socket;
+    QByteArray latestServerMessage;
+    QList<QString> errorMessages;
+
+
+    // Private Helper Methods
+    void disconnectServer();
 
 signals:
 

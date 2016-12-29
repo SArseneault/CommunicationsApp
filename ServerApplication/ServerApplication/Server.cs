@@ -109,7 +109,7 @@ namespace ServerApplication
                 //Sending message back to the client
                 byte[] data = Encoding.ASCII.GetBytes(response);
                 clientSocket.BeginSend(data, 0, data.Length, SocketFlags.None, new AsyncCallback(SendCallBack), clientSocket);
-
+                
                 //Allow the server to accept additional connections
                 clientSocket.BeginReceive(buffer, 0, buffer.Length, SocketFlags.None, new AsyncCallback(ReceiveCallBack), clientSocket);
             }

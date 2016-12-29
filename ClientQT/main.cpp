@@ -19,18 +19,27 @@ int main(int argc, char *argv[])
     qDebug() << "Establishing connection...";
     ClientObj.establishConnection();
 
-    const char * message = "";
-    const char * response = "";
+    QByteArray message = "";
+    QByteArray response = "";
 
     while(true)
     {
+        //Retreieve message from user
         qDebug() << "Send message to server: ";
         message = cin.readLine().toLatin1().data();
         qDebug() << message;
 
-        response = ClientObj.SendMessage("NOPE");
+        //Sending message to server
+        if(!ClientObj.SendMessage(message))
+        {
+            qDebug() << "ERROR: " << ClientObj.GetErrorMessages();
+        }
+        else
+        {
+            //Retrieve the servers response
+            qDebug() << "Server response: " << ClientObj.GetLatestServerMessage();
+        }
 
-        qDebug() << "Server response: " << response;
     }
 
 

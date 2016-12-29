@@ -1,12 +1,12 @@
 #include "client.h"
+#include <QByteArray>
+#include <QDateTime>
+#include <QString>
 
-client::client(QObject *parent) : QObject(parent)
-{
-
-}
-
-
-void client::establishConnection()
+/*
+ * Public Methods
+ */
+bool client::establishConnection()
 {
     socket = new QTcpSocket(this);
 
@@ -20,6 +20,7 @@ void client::establishConnection()
     //
     while(!socket->waitForConnected(1000))
     {
+
         connectionAttempt++;
 
         qDebug() << "Current Connection Attempt #: " << connectionAttempt;
@@ -30,72 +31,107 @@ void client::establishConnection()
 
     qDebug() << "Connected to server!";
 
-    /*
-    if(socket->waitForConnected(3000))
-    {
-        qDebug() << "Connected!";
 
-        //Send Data
-        socket->write("hello server\r\n\r\n");
-
-        //Retrieve Response
-        socket->waitForBytesWritten(1000);
-        socket->waitForReadyRead(3000);
-        qDebug() << "Reading: " << socket->bytesAvailable();
-        qDebug() << socket->readAll();
-
-       // socket->close();
-    }
-    else
-    {
-        qDebug() << "Not Connected";
-    }
-    */
-
-
+    return true;
 
 }
 
-const char * client::SendMessage(const char * message)
+bool client::SendMessage(QByteArray message)
 {
-    const char * response = "";
-    qint64 responseBytes;
 
-    try
-    {
-        //Sending message to server
-        socket->write(message);
+    QByteArray response = "";
+    bool reconnectFlag = false;
 
-        //Retreieve message from server
-        socket->waitForBytesWritten(1000);
-        socket->waitForReadyRead(3000);
-        responseBytes = socket->bytesAvailable();
+     //Sending message to server
+     if(socket->write(message) == -1)
+     {
+         reconnectFlag = true;
+         errorMessages.append("There was an error writing data to the server.");
+     }
 
-        response = socket->readAll();
+     //Retrieve message from server
+     if(!socket->waitForBytesWritten(1000))
+     {
+         reconnectFlag = true;
+         errorMessages.append("There was an error waiting for bytes to be written.");
+     }
+
+     if(!socket->waitForReadyRead(3000))
+     {
+         reconnectFlag = true;
+         errorMessages.append("There was an error waiting for ready read.");
+     }
+
+     response = socket->readAll();
 
 
-        qDebug() << response;
-    }
-    catch(int)
-    {
-        qDebug() << "Lost Connection to Server";
-        disconnectServer();
-        establishConnection();
-    }
 
-    return response;
+   if(reconnectFlag)
+   {
+       //Re-establish the connection
+       disconnectServer();
+       establishConnection();
+
+
+       return false;
+   }
+
+
+    //Store the repsonse
+    latestServerMessage = response;
+
+    return true;
 
 }
 
+/*
+ * Private Helper Methods
+ */
 void client::disconnectServer()
 {
     socket->close();
 }
 
+/*
+ * Getters and Setters
+ */
+QByteArray client::GetLatestServerMessage()
+{
+    return latestServerMessage;
+}
+
+QString client::GetErrorMessages()
+{
+    //Creating a string which will append all of the error strings
+    QString errorsAppended = "";
 
 
+    foreach(QString error, errorMessages)
+    {
+        errorsAppended += error + " ";
+    }
+
+    //Clearing the error messages since they have been read
+    errorMessages.clear();
+
+
+    return errorsAppended;
+}
+
+/*
+ * Default Constructors
+ */
 client::client(int port)
 {
     //Storing the port
     this->port = port;
+
 }
+
+client::client(QObject *parent) : QObject(parent)
+{
+
+}
+
+
+
